@@ -76,7 +76,7 @@ void snakePrint(const Snake& s)
   // Clear matrix
   myMatrix.flush();
   // Print snake
-  for (byte i = 0; i < s.lenght; i++)
+  for (byte i = 0; i < s.length; i++)
   {
     myMatrix.dot(tmp -> x, tmp -> y);
     tmp = tmp -> next;

@@ -3,7 +3,7 @@
 // Constructor
 Snake::Snake()
 {
-  lenght = 1;
+  length = 1;
   head = new Dot;
   head -> dir = RIGHT;
   head -> x = 1;
@@ -47,7 +47,7 @@ void Snake::append()
 
   tail = tail -> next;
   tail -> next = NULL;
-  lenght++;
+  length++;
 }
 
 // Move the snake in the current direction
@@ -56,7 +56,7 @@ void Snake::move()
   Dot *p = head;
   direct tmp1 = p -> dir;
   direct tmp2 = p -> dir;
-  for(byte i = 0; i < lenght; i++, p = p -> next)
+  for(byte i = 0; i < length; i++, p = p -> next)
   { 
     switch(p -> dir)
     {

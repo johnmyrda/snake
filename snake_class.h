@@ -16,7 +16,7 @@ class Snake
     Dot *next;
   };
 
-  byte lenght;
+  byte length;
   Dot *head;
   Dot *tail;
   byte apple[2];
