@@ -7,6 +7,7 @@ Snake::Snake(int fieldWidth, int fieldHeight)
 }
 
 void Snake::construct(int width, int height) {
+  maxLength = 255;
   length = 1;
   head = new Dot;
   head -> dir = RIGHT;
@@ -14,11 +15,14 @@ void Snake::construct(int width, int height) {
   head -> y = random(0, height);
   head -> next = NULL;
   tail = head;
-  apple[0] = 0;
-  apple[1] = 0;
+  newApple();
   fieldWidth = width;
   fieldHeight = height;
 }
+
+void Snake::setMaxLength(int length){
+    maxLength = length;
+  }
 
 //contain a value within [0, limit)
 int wrapPosition(int position, int limit){
@@ -34,34 +38,53 @@ int wrapPosition(int position, int limit){
 // Add a "piece" of snake after eating an apple
 void Snake::append()
 {
-  tail -> next = new Dot;
-  Dot *tmp = tail -> next;
-  tmp -> dir = tail -> dir;
-
-  switch (tail -> dir)
-  {
-    case UP:
-      tmp->x = tail->x;
-      tmp->y = wrapPosition(tail->y + 1, fieldHeight);
-      break;
-    case RIGHT:
-      tmp->y = tail->y;
-      tmp->x = wrapPosition(tail->x - 1, fieldWidth);
-      break;
-    case DOWN:
-      tmp->x = tail->x;
-      tmp->y = wrapPosition(tail->y - 1, fieldHeight);
-      break;
-    case LEFT:
-      tmp->y = tail->y;
-      tmp->x = wrapPosition(tail->x + 1, fieldWidth);
-      break;
+  if(length >= maxLength){
+    reset();  
+  } else {
+    tail -> next = new Dot;
+    Dot *tmp = tail -> next;
+    tmp -> dir = tail -> dir;
+  
+    switch (tail -> dir)
+    {
+      case UP:
+        tmp->x = tail->x;
+        tmp->y = wrapPosition(tail->y + 1, fieldHeight);
+        break;
+      case RIGHT:
+        tmp->y = tail->y;
+        tmp->x = wrapPosition(tail->x + 1, fieldWidth);
+        break;
+      case DOWN:
+        tmp->x = tail->x;
+        tmp->y = wrapPosition(tail->y - 1, fieldHeight);
+        break;
+      case LEFT:
+        tmp->y = tail->y;
+        tmp->x = wrapPosition(tail->x - 1, fieldWidth);
+        break;
+    }
+  
+    tail = tail -> next;
+    tail -> next = NULL;
+    length++;
   }
-
-  tail = tail -> next;
-  tail -> next = NULL;
-  length++;
 }
+
+void Snake::reset(){
+    Dot * tempNode = head->next;
+    //free all except the head Dot
+    while(tempNode!=NULL)
+    {   
+        head->next = tempNode->next;
+        tempNode->next = NULL;
+        free(tempNode);
+        tempNode = head->next;
+    }
+
+    length = 1;
+    tail = head;
+  }
 
 // Move the snake in the current direction
 void Snake::move()
@@ -77,13 +100,13 @@ void Snake::move()
         p -> y = wrapPosition(p -> y - 1, fieldHeight);
         break;
       case RIGHT:
-        p -> x = wrapPosition(p -> x + 1, fieldWidth);
+        p -> x = wrapPosition(p -> x - 1, fieldWidth);
         break;
       case DOWN:
         p -> y = wrapPosition(p -> y + 1, fieldHeight);
         break;
       case LEFT:
-        p -> x = wrapPosition(p -> x - 1, fieldWidth);
+        p -> x = wrapPosition(p -> x + 1, fieldWidth);
         break;
     }
 

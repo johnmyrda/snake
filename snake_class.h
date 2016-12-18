@@ -15,7 +15,7 @@ class Snake
     Dot *next;
   };
 
-  
+  byte maxLength;
   byte length;
   Dot *head;
   Dot *tail;
@@ -30,7 +30,9 @@ public:
   void move();
   void changeDir(direct d);
   void append();
+  void setMaxLength(int length);
   //boolean posHead(byte x, byte y);
+  void reset();
   void newApple();
   boolean eat();
   //void print();
