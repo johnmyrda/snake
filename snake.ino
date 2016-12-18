@@ -25,7 +25,7 @@ const uint8_t BRIGHTNESS = 64;
 const int NUM_LEDS = (MatrixWidth * MatrixHeight);
 CRGB leds[NUM_LEDS];
 
-Snake mySnake = Snake(MatrixWidth, MatrixHeight);
+Snake snake = Snake(MatrixWidth, MatrixHeight);
 
 boolean eaten = true;
 char val;
@@ -35,6 +35,7 @@ byte y;
 void setup()
 {
   //Serial.begin(9600);
+  snake.setMaxLength(10);
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   FastLED.setBrightness( BRIGHTNESS );  
   randomSeed( analogRead(A2) );
@@ -54,35 +55,35 @@ void loop()
   switch(val)
   {
   case 'w':
-    mySnake.changeDir(UP);
+    snake.changeDir(UP);
     break;
   case 'a':
-    mySnake.changeDir(LEFT);
+    snake.changeDir(LEFT);
     break;
   case 's':
-    mySnake.changeDir(DOWN);
+    snake.changeDir(DOWN);
     break;
   case 'd':
-    mySnake.changeDir(RIGHT);
+    snake.changeDir(RIGHT);
     break;
   }
 
-  mySnake.move();
+  snake.move();
 
   // If apple has been eaten, draw new one
   if( eaten )
   {
-    mySnake.newApple();
+    snake.newApple();
     eaten = false;
   }
   // else check if the snake eats it
-  else if ( mySnake.eat() )
+  else if ( snake.eat() )
   {
     eaten = true;
-    mySnake.append();
+    snake.append();
   }
 
-  snakePrint(mySnake);
+  snakePrint(snake);
   delay(500);
 }
 
