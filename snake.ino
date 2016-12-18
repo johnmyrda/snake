@@ -5,12 +5,27 @@
  * GPL-3.0
 */
 
-#include <ledMatrix.h>
+#include <FastLED.h>
 #include "snake_class.h"
 
-ledMatrix myMatrix(8,10,12);
+// Define variable for FastLED usage
+//#define NUM_LEDS 60
+#define CHIPSET WS2812B
+#define COLOR_ORDER GRB
+#define DATA_PIN A1
 
-Snake mySnake;
+const CRGB SNAKE_COLOR = CRGB::White;
+const CRGB APPLE_COLOR = CRGB::GreenYellow;
+
+const uint8_t MatrixWidth  = 12;
+const uint8_t MatrixHeight = 5;
+const bool    MatrixSerpentineLayout = false;
+const uint8_t BRIGHTNESS = 64;
+
+const int NUM_LEDS = (MatrixWidth * MatrixHeight);
+CRGB leds[NUM_LEDS];
+
+Snake mySnake = Snake(MatrixWidth, MatrixHeight);
 
 boolean eaten = true;
 char val;
@@ -19,9 +34,10 @@ byte y;
 
 void setup()
 {
-  Serial.begin(9600);
-  myMatrix.setBrightness(2);
-  randomSeed( analogRead(A0) );
+  //Serial.begin(9600);
+  FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+  FastLED.setBrightness( BRIGHTNESS );  
+  randomSeed( analogRead(A2) );
 }
 
 void loop()
@@ -74,16 +90,35 @@ void snakePrint(const Snake& s)
 {
   Snake::Dot *tmp = s.head;
   // Clear matrix
-  myMatrix.flush();
+  FastLED.clear();
   // Print snake
   for (byte i = 0; i < s.length; i++)
   {
-    myMatrix.dot(tmp -> x, tmp -> y);
+    leds[XY(tmp -> x, tmp -> y)] = SNAKE_COLOR;
     tmp = tmp -> next;
   }
   // Print apple
-  myMatrix.dot(s.apple[0], s.apple[1]);
+  leds[XY(s.apple[0], s.apple[1])] = APPLE_COLOR;
   // Actually display matrix content
-  myMatrix.load();
+  FastLED.show();
 }
 
+uint16_t XY( uint8_t x, uint8_t y)
+{
+  uint16_t i;
+  
+  if( MatrixSerpentineLayout == false) {
+    i = (y * MatrixWidth) + x;
+  } else {
+    if( y & 0x01) {
+      // Odd rows run backwards
+      uint8_t reverseX = (MatrixWidth - 1) - x;
+      i = (y * MatrixWidth) + reverseX;
+    } else {
+      // Even rows run forwards
+      i = (y * MatrixWidth) + x;
+    }
+  }
+  
+  return i;
+}

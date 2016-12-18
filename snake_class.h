@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ledMatrix.h>
 
 enum direct {
   UP = 1, RIGHT = 2, DOWN = -1, LEFT = -2};
@@ -11,17 +10,23 @@ class Snake
   struct Dot
   {
     direct dir;
-    byte x;
-    byte y;
+    int x;
+    int y;
     Dot *next;
   };
 
+  
   byte length;
   Dot *head;
   Dot *tail;
   byte apple[2];
+  int fieldWidth;
+  int fieldHeight;
+  bool xWrap;
+  bool yWrap;
+  
 public:
-  Snake();
+  Snake(int fieldWidth, int fieldHeight);  
   void move();
   void changeDir(direct d);
   void append();
@@ -30,4 +35,6 @@ public:
   boolean eat();
   //void print();
   //~Snake();
+private:
+  void construct(int fieldWidth, int fieldHeight);
 };
