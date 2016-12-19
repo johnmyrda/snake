@@ -68,6 +68,8 @@ void loop()
     break;
   }
 
+  snake.changeDir(snake.aiMove());
+
   snake.move();
 
   // If apple has been eaten, draw new one
@@ -84,7 +86,7 @@ void loop()
   }
 
   snakePrint(snake);
-  delay(500);
+  delay(300);
 }
 
 void snakePrint(const Snake& s)

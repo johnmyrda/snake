@@ -34,9 +34,11 @@ public:
   //boolean posHead(byte x, byte y);
   void reset();
   void newApple();
+  direct aiMove();
   boolean eat();
   //void print();
   //~Snake();
 private:
   void construct(int fieldWidth, int fieldHeight);
+  int modularDistance(direct dir, int a, int b);
 };

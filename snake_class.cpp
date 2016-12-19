@@ -145,6 +145,54 @@ void Snake::changeDir(direct d)
   return ((x == head->x) && (y == head->y)) ? true: false;
   }*/
 
+direct Snake::aiMove(){
+    
+    if(head->dir == UP || head->dir == DOWN && apple[0] != head->x){
+      if(apple[1] == head->y){
+          if(modularDistance(LEFT, head->x, apple[0]) < fieldWidth/2){
+            return LEFT;
+          } else {
+            return RIGHT;
+          }
+        }
+    } else 
+      if(head->dir == LEFT || head->dir == RIGHT && apple[1] != head->y){
+      if(apple[0] == head->x){
+          if(modularDistance(DOWN, head->y, apple[1]) < fieldHeight/2){
+            return DOWN;
+          } else {
+            return UP;
+          }
+        }
+    } else {
+      return head->dir;
+    }
+        
+  }
+
+//given a direction, what is the distance from point a to b
+int Snake::modularDistance(direct dir, int a, int b){
+    int dist = b - a;
+    switch (dir)
+    {
+      case UP:
+        dist = (dist + fieldHeight) % fieldHeight;
+        break;
+      case RIGHT:
+        dist = (dist + fieldWidth) % fieldWidth;
+        break;
+      case DOWN:
+        dist = dist * -1;
+        dist = (dist + fieldHeight) % fieldHeight;        
+        break;
+      case LEFT:
+        dist = dist * -1;
+        dist = (dist + fieldWidth) % fieldWidth;
+        break;
+    }
+    return dist;
+  }
+
 // Spawn a new apple
 void Snake::newApple()
 {
